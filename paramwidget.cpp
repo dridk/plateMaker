@@ -23,12 +23,15 @@ ParamWidget::ParamWidget(QWidget *parent) : QDockWidget(parent)
 
     QAction  * pasteAction = new QAction("Paste",this);
     QAction  * copyAction = new QAction("Copy",this);
+    QAction  * cutAction = new QAction("Cut",this);
 
     connect(pasteAction,SIGNAL(triggered()),this,SLOT(paste()));
     connect(copyAction,SIGNAL(triggered()),this,SLOT(copy()));
+    connect(cutAction,SIGNAL(triggered()),this,SLOT(cut()));
 
     mView->addAction(pasteAction);
     mView->addAction(copyAction);
+    mView->addAction(cutAction);
 
 
 }
@@ -47,6 +50,18 @@ QStringList ParamWidget::stringList() const
 QListView *ParamWidget::view()
 {
     return mView;
+}
+
+void ParamWidget::keyPressEvent(QKeyEvent *event)
+{
+    if (event->matches(QKeySequence::Copy))
+        copy();
+
+    if (event->matches(QKeySequence::Paste))
+        paste();
+
+    if (event->matches(QKeySequence::Cut))
+        cut();
 }
 
 void ParamWidget::paste()
@@ -77,6 +92,22 @@ void ParamWidget::copy()
 
 
     qApp->clipboard()->setText(list.join("\n"));
+
+
+}
+
+void ParamWidget::cut()
+{
+
+    copy();
+    QStringList list = mModel->stringList();
+
+    foreach (QModelIndex index, mView->selectionModel()->selectedRows()){
+
+       list.removeAll(index.data().toString());
+    }
+
+    mModel->setStringList(list);
 
 
 }

@@ -4,7 +4,7 @@
 #include <QDockWidget>
 #include <QListView>
 #include <QStringListModel>
-
+#include <QKeyEvent>
 class ParamWidget : public QDockWidget
 {
     Q_OBJECT
@@ -15,9 +15,12 @@ public:
      QStringList stringList() const;
      QListView *view() ;
 
+     virtual void keyPressEvent(QKeyEvent*event);
+
 public slots:
     void paste();
     void copy();
+    void cut();
     void setStringList(const QStringList& list);
 
 
