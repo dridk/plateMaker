@@ -25,12 +25,15 @@ ParamWidget::ParamWidget(QWidget *parent) : QTableView(parent)
     QAction  * copyAction = new QAction("Copy",this);
     QAction  * cutAction = new QAction("Cut",this);
     QAction  * delAction = new QAction("del",this);
+    QAction  * insertAction = new QAction("Insert",this);
 
     connect(pasteAction,SIGNAL(triggered()),this,SLOT(paste()));
     connect(copyAction,SIGNAL(triggered()),this,SLOT(copy()));
     connect(cutAction,SIGNAL(triggered()),this,SLOT(cut()));
     connect(delAction,SIGNAL(triggered()),this,SLOT(clear()));
+    connect(insertAction,SIGNAL(triggered()),this,SLOT(insert()));
 
+    addAction(insertAction);
     addAction(pasteAction);
     addAction(copyAction);
     addAction(cutAction);
@@ -70,6 +73,9 @@ void ParamWidget::keyPressEvent(QKeyEvent *event)
 
     if (event->matches(QKeySequence::Delete))
         clear();
+
+    if (event->key() == Qt::Key_Insert)
+        insert();
 }
 
 void ParamWidget::paste()
@@ -110,12 +116,32 @@ void ParamWidget::cut()
 
 void ParamWidget::clear()
 {
+    QList<int> ids;
     QStringList list = mModel->stringList();
     foreach (QModelIndex index, selectionModel()->selectedRows()){
-
-        list.removeAll(index.data().toString());
+        ids.append(index.row());
     }
+
+    qSort(ids.begin(), ids.end(), qGreater<int>());
+
+    foreach (int id, ids){
+       list.removeAt(id);
+        qDebug()<<id;
+    }
+
+
     mModel->setStringList(list);
+
+}
+
+void ParamWidget::insert()
+{
+
+    QStringList list = mModel->stringList();
+    list.append("<value>");
+    mModel->setStringList(list);
+
+
 
 }
 
