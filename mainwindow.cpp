@@ -3,7 +3,11 @@
 #include <QDebug>
 #include <QRegExp>
 #include <QMessageBox>
-
+#include <QJsonDocument>
+#include <QJsonArray>
+#include <QJsonObject>
+#include <QFile>
+#include <QFileDialog>
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -19,11 +23,16 @@ MainWindow::MainWindow(QWidget *parent) :
 
     mTabWidget->addTab(mViewResult,mViewResult->windowIcon(), "Results");
 
-    QDockWidget * dockWidgetA = new QDockWidget;
-    QDockWidget * dockWidgetB = new QDockWidget;
+    QDockWidget * dockWidgetA = new QDockWidget("List A");
+    QDockWidget * dockWidgetB = new QDockWidget("List B");;
 
     dockWidgetA->setWidget(mViewA);
     dockWidgetB->setWidget(mViewB);
+
+
+    dockWidgetA->setFeatures(QDockWidget::NoDockWidgetFeatures);
+    dockWidgetB->setFeatures(QDockWidget::NoDockWidgetFeatures);
+
 
 
     addDockWidget(Qt::LeftDockWidgetArea, dockWidgetA);
@@ -37,6 +46,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionOrganize,SIGNAL(triggered()),this,SLOT(organize()));
     connect(ui->actionAbout_Qt,SIGNAL(triggered()),qApp,SLOT(aboutQt()));
     connect(ui->actionAbout,SIGNAL(triggered()),this,SLOT(showAbout()));
+    connect(ui->actionSave,SIGNAL(triggered()),this,SLOT(save()));
+    connect(ui->actionLoad,SIGNAL(triggered()),this,SLOT(load()));
 
     setCentralWidget(mTabWidget);
 
@@ -135,4 +146,52 @@ void MainWindow::showAbout()
 
 
 
+}
+
+void MainWindow::save()
+{
+
+    QString filename = QFileDialog::getSaveFileName(this,"open file","", tr("Plate maker(*.json)"));
+
+    QFile file(filename);
+
+    if (file.open(QIODevice::WriteOnly)){
+        QJsonDocument doc ;
+        QJsonObject root;
+        root.insert("reg", mRegEdit->text());
+        root.insert("listA", QJsonArray::fromStringList(mViewA->stringList()));
+        root.insert("listB", QJsonArray::fromStringList(mViewB->stringList()));
+        doc.setObject(root);
+        file.write(doc.toJson());
+        file.close();
+    }
+
+
+}
+
+void MainWindow::load()
+{
+    QString filename = QFileDialog::getOpenFileName(this,"open file","", tr("Plate maker(*.json)"));
+
+    QFile file(filename);
+
+    if (file.open(QIODevice::ReadOnly)){
+        QJsonDocument doc  = QJsonDocument::fromJson(file.readAll());
+
+        mRegEdit->setText(doc.object().value("reg").toString());
+
+        QStringList a, b;
+        foreach (QVariant item, doc.object().value("listA").toArray().toVariantList() )
+            a.append(item.toString());
+
+        foreach (QVariant item, doc.object().value("listB").toArray().toVariantList() )
+            b.append(item.toString());
+
+
+        mViewA->setData(a);
+        mViewB->setData(b);
+        file.close();
+
+        organize();
+    }
 }

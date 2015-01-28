@@ -23,7 +23,7 @@ QVariant ParamModel::headerData(int section, Qt::Orientation orientation, int ro
 
 
     if ( orientation == Qt::Horizontal){
-        return "Values";
+        return objectName();
     }
     return QVariant();
 }
@@ -39,6 +39,7 @@ void ParamModel::setHeaders(const QStringList &list)
     mHeaders = list;
     emit layoutChanged();
 }
+
 
 QString ParamModel::sectionToAlpha(int section) const
 {

@@ -17,6 +17,7 @@ ParamWidget::ParamWidget(QWidget *parent) : QTableView(parent)
     verticalHeader()->setDefaultSectionSize(20);
     setAlternatingRowColors(true);
 
+    horizontalHeader()->hide();
 
 
 

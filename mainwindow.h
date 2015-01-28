@@ -23,6 +23,8 @@ public:
 public slots:
     void organize();
     void showAbout();
+    void save();
+    void load();
 
 
 private:

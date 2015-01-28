@@ -30,6 +30,7 @@ public slots:
     void setData(const QStringList& list, const QStringList& headers = QStringList());
 
 
+
 private:
     ParamModel * mModel;
 };
