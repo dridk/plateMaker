@@ -3,9 +3,12 @@
 
 #include <QDockWidget>
 #include <QListView>
+#include <QTableView>
 #include <QStringListModel>
 #include <QKeyEvent>
-class ParamWidget : public QDockWidget
+#include "parammodel.h"
+
+class ParamWidget : public QTableView
 {
     Q_OBJECT
 public:
@@ -13,7 +16,9 @@ public:
     ~ParamWidget();
 
      QStringList stringList() const;
-     QListView *view() ;
+     void setAlphabetic(bool active);
+
+
 
      virtual void keyPressEvent(QKeyEvent*event);
 
@@ -21,12 +26,12 @@ public slots:
     void paste();
     void copy();
     void cut();
-    void setStringList(const QStringList& list);
+    void clear();
+    void setData(const QStringList& list, const QStringList& headers = QStringList());
 
 
 private:
-    QListView * mView;
-    QStringListModel * mModel;
+    ParamModel * mModel;
 };
 
 #endif // PARAMWIDGET_H

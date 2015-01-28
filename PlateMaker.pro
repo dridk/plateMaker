@@ -15,10 +15,12 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     paramwidget.cpp \
-    finalgridwidget.cpp
+    finalgridwidget.cpp \
+    parammodel.cpp
 
 HEADERS  += mainwindow.h \
     paramwidget.h \
-    finalgridwidget.h
+    finalgridwidget.h \
+    parammodel.h
 
 FORMS    += mainwindow.ui

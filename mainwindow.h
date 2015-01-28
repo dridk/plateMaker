@@ -27,9 +27,9 @@ public slots:
 
 private:
     Ui::MainWindow *ui;
-    ParamWidget* mResultWidget;
-    ParamWidget* mValueWidget;
-    ParamWidget * mPatientWidget;
+    ParamWidget* mViewResult;
+    ParamWidget* mViewB;
+    ParamWidget * mViewA;
     QLineEdit * mRegEdit;
     QTabWidget * mTabWidget;
 };

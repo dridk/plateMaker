@@ -3,20 +3,19 @@
 #include <QDebug>
 #include <QAction>
 #include <QApplication>
-ParamWidget::ParamWidget(QWidget *parent) : QDockWidget(parent)
+#include <QHeaderView>
+ParamWidget::ParamWidget(QWidget *parent) : QTableView(parent)
 {
-    mView = new QListView;
-    mModel = new QStringListModel;
+    mModel = new ParamModel;
+    setModel(mModel);
 
-    mView->setModel(mModel);
+    setSelectionBehavior(QAbstractItemView::SelectRows);
+    setSelectionMode(QAbstractItemView::ExtendedSelection);
+    setContextMenuPolicy(Qt::ActionsContextMenu);
 
-    setWidget(mView);
-    setFeatures(QDockWidget::NoDockWidgetFeatures);
-
-    mView->setSelectionBehavior(QAbstractItemView::SelectRows);
-    mView->setSelectionMode(QAbstractItemView::ExtendedSelection);
-
-    mView->setContextMenuPolicy(Qt::ActionsContextMenu);
+    horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    verticalHeader()->setDefaultSectionSize(20);
+    setAlternatingRowColors(true);
 
 
 
@@ -24,14 +23,16 @@ ParamWidget::ParamWidget(QWidget *parent) : QDockWidget(parent)
     QAction  * pasteAction = new QAction("Paste",this);
     QAction  * copyAction = new QAction("Copy",this);
     QAction  * cutAction = new QAction("Cut",this);
+    QAction  * delAction = new QAction("del",this);
 
     connect(pasteAction,SIGNAL(triggered()),this,SLOT(paste()));
     connect(copyAction,SIGNAL(triggered()),this,SLOT(copy()));
     connect(cutAction,SIGNAL(triggered()),this,SLOT(cut()));
+    connect(delAction,SIGNAL(triggered()),this,SLOT(clear()));
 
-    mView->addAction(pasteAction);
-    mView->addAction(copyAction);
-    mView->addAction(cutAction);
+    addAction(pasteAction);
+    addAction(copyAction);
+    addAction(cutAction);
 
 
 }
@@ -45,12 +46,15 @@ QStringList ParamWidget::stringList() const
 {
     return mModel->stringList();
 
+
 }
 
-QListView *ParamWidget::view()
+void ParamWidget::setAlphabetic(bool active)
 {
-    return mView;
+    mModel->setAlphabetic(active);
+
 }
+
 
 void ParamWidget::keyPressEvent(QKeyEvent *event)
 {
@@ -62,6 +66,9 @@ void ParamWidget::keyPressEvent(QKeyEvent *event)
 
     if (event->matches(QKeySequence::Cut))
         cut();
+
+    if (event->matches(QKeySequence::Delete))
+        clear();
 }
 
 void ParamWidget::paste()
@@ -84,13 +91,11 @@ void ParamWidget::copy()
 {
 
     QStringList list;
-    foreach (QModelIndex index, mView->selectionModel()->selectedRows()){
+    foreach (QModelIndex index, selectionModel()->selectedRows()){
 
         QString txt = index.data().toString();
         list.append(txt);
     }
-
-
     qApp->clipboard()->setText(list.join("\n"));
 
 
@@ -98,25 +103,27 @@ void ParamWidget::copy()
 
 void ParamWidget::cut()
 {
-
     copy();
+    clear();
+}
+
+void ParamWidget::clear()
+{
     QStringList list = mModel->stringList();
+    foreach (QModelIndex index, selectionModel()->selectedRows()){
 
-    foreach (QModelIndex index, mView->selectionModel()->selectedRows()){
-
-       list.removeAll(index.data().toString());
+        list.removeAll(index.data().toString());
     }
-
     mModel->setStringList(list);
-
 
 }
 
-void ParamWidget::setStringList(const QStringList &list)
+void ParamWidget::setData(const QStringList &list, const QStringList &headers)
 {
     mModel->setStringList(list);
-
-
+    mModel->setHeaders(headers);
 
 }
+
+
 

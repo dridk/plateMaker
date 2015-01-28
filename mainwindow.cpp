@@ -10,16 +10,26 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    mPatientWidget = new ParamWidget;
-    mValueWidget= new ParamWidget;
-    mResultWidget = new ParamWidget;
+    mViewResult = new ParamWidget;
+    mViewA= new ParamWidget;
+    mViewB= new ParamWidget;
+
     mTabWidget = new QTabWidget;
     mRegEdit = new QLineEdit;
 
-    mTabWidget->addTab(mResultWidget,mResultWidget->windowIcon(), "Results");
+    mTabWidget->addTab(mViewResult,mViewResult->windowIcon(), "Results");
 
-    addDockWidget(Qt::LeftDockWidgetArea, mPatientWidget);
-    addDockWidget(Qt::LeftDockWidgetArea, mValueWidget);
+    QDockWidget * dockWidgetA = new QDockWidget;
+    QDockWidget * dockWidgetB = new QDockWidget;
+
+    dockWidgetA->setWidget(mViewA);
+    dockWidgetB->setWidget(mViewB);
+
+
+    addDockWidget(Qt::LeftDockWidgetArea, dockWidgetA);
+    addDockWidget(Qt::LeftDockWidgetArea, dockWidgetB);
+
+
 
 
     ui->mainToolBar->addWidget(mRegEdit);
@@ -39,13 +49,15 @@ MainWindow::MainWindow(QWidget *parent) :
     tempA<<"A"<<"B"<<"C";
     tempB<<"1"<<"2"<<"3"<<"4"<<"5"<<"6";
 
-    mPatientWidget->setStringList(tempA);
-    mValueWidget->setStringList(tempB);
+    mViewA->setData(tempA);
+    mViewB->setData(tempB);
 
     mRegEdit->setText("PKD{{A}}_ULTIME{{B}}");
 
-    mPatientWidget->setWindowTitle("Key A");
-    mValueWidget->setWindowTitle("Key B");
+    mViewA->setWindowTitle("Key A");
+    mViewB->setWindowTitle("Key B");
+
+    mViewA->setAlphabetic(true);
 
 
 
@@ -61,26 +73,37 @@ MainWindow::~MainWindow()
 void MainWindow::organize()
 {
     QStringList list;
+    QStringList headers;
     QString pattern = mRegEdit->text();
+    int sectionA= 0, sectionB = 0;
 
-    foreach (QString a, mPatientWidget->stringList()) {
+    foreach (QString a, mViewA->stringList()) {
 
+        sectionB = 0;
 
-        foreach (QString b, mValueWidget->stringList())
+        foreach (QString b, mViewB->stringList())
         {
             QString tmp = pattern;
             QString txt = tmp.replace("{{A}}", a);
             txt = txt.replace("{{B}}",b);
             list.append(txt);
+
+            QString headerA = mViewA->model()->headerData(sectionA, Qt::Vertical).toString();
+            QString headerB = mViewB->model()->headerData(sectionB, Qt::Vertical).toString();
+
+            headers.append(QString("%1%2").arg(headerA).arg(headerB));
+            sectionB++;
+
+
         }
 
+        sectionA++;
 
 
     }
 
 
-    mResultWidget->setStringList(list);
-
+    mViewResult->setData(list,headers);
 
 
 
