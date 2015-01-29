@@ -40,6 +40,9 @@ MainWindow::MainWindow(QWidget *parent) :
     addDockWidget(Qt::LeftDockWidgetArea, dockWidgetB);
 
 
+    ui->actionSave->setShortcut(QKeySequence::Save);
+    ui->actionLoad->setShortcut(QKeySequence::Open);
+
 
     ui->menuEdit->addAction(tr("Insert"),this,SLOT(insert()),QKeySequence(tr("Insert")));
     ui->menuEdit->addAction(tr("Cut"),this,SLOT(cut()),QKeySequence::Cut);
@@ -49,7 +52,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->menuEdit->addSeparator();
     ui->menuEdit->addAction(tr("Select All"),this,SLOT(selectAll()),QKeySequence::SelectAll);
 
-
+    connect(mRegEdit,SIGNAL(returnPressed()),this,SLOT(organize()));
 
     ui->mainToolBar->addWidget(mRegEdit);
     ui->mainToolBar->addAction(QIcon(":run.png"),tr("Organize"),this,SLOT(organize()));
