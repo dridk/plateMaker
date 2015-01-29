@@ -1,3 +1,16 @@
+/* PlateMaker
+Copyright (C) 2015 www.labsquare.org
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+You should have received a copy of the GNU General Public License
+along with this program. If not, see <http://www.gnu.org/licenses/>.*/
+
 #include "paramwidget.h"
 #include <QClipboard>
 #include <QDebug>
@@ -19,31 +32,6 @@ ParamWidget::ParamWidget(QWidget *parent) : QTableView(parent)
 
     horizontalHeader()->hide();
 
-
-
-
-//    QAction  * pasteAction = new QAction(QIcon(":paste.png"),"Paste",this);
-//    QAction  * copyAction = new QAction(QIcon(":copy.png"),"Copy",this);
-//    QAction  * cutAction = new QAction(QIcon(":cut.png"),"Cut",this);
-//    QAction  * delAction = new QAction(QIcon(":del.png"),"remove",this);
-//    QAction  * insertAction = new QAction(QIcon(":add.png"),"Insert",this);
-
-
-
-
-//    connect(pasteAction,SIGNAL(triggered()),this,SLOT(paste()));
-//    connect(copyAction,SIGNAL(triggered()),this,SLOT(copy()));
-//    connect(cutAction,SIGNAL(triggered()),this,SLOT(cut()));
-//    connect(delAction,SIGNAL(triggered()),this,SLOT(remove()));
-//    connect(insertAction,SIGNAL(triggered()),this,SLOT(insert()));
-
-//    addAction(insertAction);
-//    addAction(pasteAction);
-//    addAction(copyAction);
-//    addAction(cutAction);
-//    addAction(delAction);
-
-
 }
 
 ParamWidget::~ParamWidget()
@@ -64,27 +52,6 @@ void ParamWidget::setAlphabetic(bool active)
 
 }
 
-
-void ParamWidget::keyPressEvent(QKeyEvent *event)
-{
-//    if (event->matches(QKeySequence::Copy))
-//        copy();
-
-//    if (event->matches(QKeySequence::Paste))
-//        paste();
-
-//    if (event->matches(QKeySequence::Cut))
-//        cut();
-
-//    if (event->matches(QKeySequence::Delete))
-//        remove();
-
-//    if (event->key() == Qt::Key_Insert)
-//        insert();
-
-//    if (event->matches(QKeySequence::SelectAll))
-//        selectAll();
-}
 
 void ParamWidget::paste()
 {
