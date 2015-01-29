@@ -6,6 +6,7 @@ ParamModel::ParamModel(QObject * parent)
 {
 
     mIsAlphabetic = false;
+
 }
 
 ParamModel::~ParamModel()

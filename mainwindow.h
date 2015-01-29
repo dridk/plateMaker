@@ -25,6 +25,15 @@ public slots:
     void showAbout();
     void save();
     void load();
+    void paste();
+    void copy();
+    void cut();
+    void remove();
+    void insert();
+    void selectAll();
+
+protected:
+    ParamWidget * focusWidget();
 
 
 private:
@@ -33,7 +42,7 @@ private:
     ParamWidget* mViewB;
     ParamWidget * mViewA;
     QLineEdit * mRegEdit;
-    QTabWidget * mTabWidget;
+
 };
 
 #endif // MAINWINDOW_H

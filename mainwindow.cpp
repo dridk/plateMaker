@@ -8,6 +8,7 @@
 #include <QJsonObject>
 #include <QFile>
 #include <QFileDialog>
+#include <QLayout>
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -18,13 +19,13 @@ MainWindow::MainWindow(QWidget *parent) :
     mViewA= new ParamWidget;
     mViewB= new ParamWidget;
 
-    mTabWidget = new QTabWidget;
     mRegEdit = new QLineEdit;
 
-    mTabWidget->addTab(mViewResult,mViewResult->windowIcon(), "Results");
+    mRegEdit->setPlaceholderText("Write your expression with {{A}} and {{B}} ");
+
 
     QDockWidget * dockWidgetA = new QDockWidget("List A");
-    QDockWidget * dockWidgetB = new QDockWidget("List B");;
+    QDockWidget * dockWidgetB = new QDockWidget("List B");
 
     dockWidgetA->setWidget(mViewA);
     dockWidgetB->setWidget(mViewB);
@@ -40,16 +41,25 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
 
+    ui->menuEdit->addAction(tr("Insert"),this,SLOT(insert()),QKeySequence(tr("Insert")));
+    ui->menuEdit->addAction(tr("Cut"),this,SLOT(cut()),QKeySequence::Cut);
+    ui->menuEdit->addAction(tr("Copy"),this,SLOT(copy()),QKeySequence::Copy);
+    ui->menuEdit->addAction(tr("Paste"),this,SLOT(paste()),QKeySequence::Paste);
+    ui->menuEdit->addAction(tr("Remove"),this,SLOT(remove()),QKeySequence::Delete);
+    ui->menuEdit->addSeparator();
+    ui->menuEdit->addAction(tr("Select All"),this,SLOT(selectAll()),QKeySequence::SelectAll);
+
+
 
     ui->mainToolBar->addWidget(mRegEdit);
-
-    connect(ui->actionOrganize,SIGNAL(triggered()),this,SLOT(organize()));
+    ui->mainToolBar->addAction(QIcon(":run.png"),tr("Organize"),this,SLOT(organize()));
+    ui->mainToolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     connect(ui->actionAbout_Qt,SIGNAL(triggered()),qApp,SLOT(aboutQt()));
     connect(ui->actionAbout,SIGNAL(triggered()),this,SLOT(showAbout()));
     connect(ui->actionSave,SIGNAL(triggered()),this,SLOT(save()));
     connect(ui->actionLoad,SIGNAL(triggered()),this,SLOT(load()));
 
-    setCentralWidget(mTabWidget);
+    setCentralWidget(mViewResult);
 
     resize(800,600);
 
@@ -194,4 +204,51 @@ void MainWindow::load()
 
         organize();
     }
+}
+
+void MainWindow::paste()
+{
+    focusWidget()->paste();
+}
+
+void MainWindow::copy()
+{
+focusWidget()->copy();
+}
+
+void MainWindow::cut()
+{
+focusWidget()->cut();
+}
+
+void MainWindow::remove()
+{
+focusWidget()->remove();
+}
+
+void MainWindow::insert()
+{
+    focusWidget()->insert();
+}
+
+void MainWindow::selectAll()
+{
+
+    focusWidget()->selectAll();
+}
+
+ParamWidget *MainWindow::focusWidget()
+{
+
+    if (mViewA->hasFocus())
+        return mViewA;
+
+    if (mViewB->hasFocus())
+        return mViewB;
+
+    if (mViewResult->hasFocus())
+        return mViewResult;
+
+    return mViewResult;
+
 }

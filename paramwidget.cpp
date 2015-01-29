@@ -21,22 +21,27 @@ ParamWidget::ParamWidget(QWidget *parent) : QTableView(parent)
 
 
 
-    QAction  * pasteAction = new QAction("Paste",this);
-    QAction  * copyAction = new QAction("Copy",this);
-    QAction  * cutAction = new QAction("Cut",this);
-    QAction  * delAction = new QAction("del",this);
-    QAction  * insertAction = new QAction("Insert",this);
 
-    connect(pasteAction,SIGNAL(triggered()),this,SLOT(paste()));
-    connect(copyAction,SIGNAL(triggered()),this,SLOT(copy()));
-    connect(cutAction,SIGNAL(triggered()),this,SLOT(cut()));
-    connect(delAction,SIGNAL(triggered()),this,SLOT(clear()));
-    connect(insertAction,SIGNAL(triggered()),this,SLOT(insert()));
+//    QAction  * pasteAction = new QAction(QIcon(":paste.png"),"Paste",this);
+//    QAction  * copyAction = new QAction(QIcon(":copy.png"),"Copy",this);
+//    QAction  * cutAction = new QAction(QIcon(":cut.png"),"Cut",this);
+//    QAction  * delAction = new QAction(QIcon(":del.png"),"remove",this);
+//    QAction  * insertAction = new QAction(QIcon(":add.png"),"Insert",this);
 
-    addAction(insertAction);
-    addAction(pasteAction);
-    addAction(copyAction);
-    addAction(cutAction);
+
+
+
+//    connect(pasteAction,SIGNAL(triggered()),this,SLOT(paste()));
+//    connect(copyAction,SIGNAL(triggered()),this,SLOT(copy()));
+//    connect(cutAction,SIGNAL(triggered()),this,SLOT(cut()));
+//    connect(delAction,SIGNAL(triggered()),this,SLOT(remove()));
+//    connect(insertAction,SIGNAL(triggered()),this,SLOT(insert()));
+
+//    addAction(insertAction);
+//    addAction(pasteAction);
+//    addAction(copyAction);
+//    addAction(cutAction);
+//    addAction(delAction);
 
 
 }
@@ -62,27 +67,30 @@ void ParamWidget::setAlphabetic(bool active)
 
 void ParamWidget::keyPressEvent(QKeyEvent *event)
 {
-    if (event->matches(QKeySequence::Copy))
-        copy();
+//    if (event->matches(QKeySequence::Copy))
+//        copy();
 
-    if (event->matches(QKeySequence::Paste))
-        paste();
+//    if (event->matches(QKeySequence::Paste))
+//        paste();
 
-    if (event->matches(QKeySequence::Cut))
-        cut();
+//    if (event->matches(QKeySequence::Cut))
+//        cut();
 
-    if (event->matches(QKeySequence::Delete))
-        clear();
+//    if (event->matches(QKeySequence::Delete))
+//        remove();
 
-    if (event->key() == Qt::Key_Insert)
-        insert();
+//    if (event->key() == Qt::Key_Insert)
+//        insert();
+
+//    if (event->matches(QKeySequence::SelectAll))
+//        selectAll();
 }
 
 void ParamWidget::paste()
 {
 
     QString txt = qApp->clipboard()->text();
-    QStringList list;
+    QStringList list = mModel->stringList();
 
     foreach (QString item, txt.split("\n")) {
         if (!item.isEmpty())
@@ -111,10 +119,10 @@ void ParamWidget::copy()
 void ParamWidget::cut()
 {
     copy();
-    clear();
+    remove();
 }
 
-void ParamWidget::clear()
+void ParamWidget::remove()
 {
     QList<int> ids;
     QStringList list = mModel->stringList();
@@ -125,7 +133,7 @@ void ParamWidget::clear()
     qSort(ids.begin(), ids.end(), qGreater<int>());
 
     foreach (int id, ids){
-       list.removeAt(id);
+        list.removeAt(id);
         qDebug()<<id;
     }
 

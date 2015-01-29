@@ -24,3 +24,11 @@ HEADERS  += mainwindow.h \
     parammodel.h
 
 FORMS    += mainwindow.ui
+
+RESOURCES += \
+    icons/icons.qrc
+
+win32:RC_ICONS = app.ico
+
+
+

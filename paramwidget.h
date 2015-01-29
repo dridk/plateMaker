@@ -26,8 +26,9 @@ public slots:
     void paste();
     void copy();
     void cut();
-    void clear();
+    void remove();
     void insert();
+
     void setData(const QStringList& list, const QStringList& headers = QStringList());
 
 
